@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Somnium — AI Dream Journal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <div class="logo">
+                    <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="20" cy="20" r="18" stroke="currentColor" stroke-width="1.5" opacity="0.6"/>
+                        <path d="M20 8C20 8 12 14 12 20C12 26 16 30 20 32C24 30 28 26 28 20C28 14 20 8 20 8Z" fill="currentColor" opacity="0.3"/>
+                        <circle cx="20" cy="18" r="3" fill="currentColor" opacity="0.8"/>
+                        <path d="M14 24C14 24 16 28 20 28C24 28 26 24 26 24" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.6"/>
+                    </svg>
+                </div>
+                <h1>Somnium</h1>
+                <span class="tagline">Neuro-Symbolic Dream Analysis</span>
+            </div>
+            <div class="nav-links">
+                <button class="nav-btn active" data-view="journal">📖 Journal</button>
+                <button class="nav-btn" data-view="analyze">🔮 Analyze</button>
+                <button class="nav-btn" data-view="dna">🧬 Dream DNA</button>
+                <button class="nav-btn" data-view="insights">📊 Insights</button>
+                <button class="nav-btn" data-view="ontology">📚 Ontology</button>
+            </div>
+            <div class="nav-actions">
+                <button id="seedBtn" class="btn-secondary">🌱 Seed Data</button>
+                <div class="connection-status" id="connectionStatus">
+                    <span class="status-dot"></span>
+                    <span class="status-text">Connecting...</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Journal View -->
+            <section id="journalView" class="view active">
+                <div class="view-header">
+                    <h2>🌙 Dream Journal</h2>
+                    <p class="subtitle">Record your dreams and unlock their hidden meanings</p>
+                </div>
+
+                <div class="dreams-grid" id="dreamsGrid">
+                    <!-- Dreams will be loaded here -->
+                </div>
+
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-icon">🌌</div>
+                    <h3>No dreams recorded yet</h3>
+                    <p>Start your journey by analyzing your first dream, or seed sample data for the demo.</p>
+                    <button class="btn-primary" onclick="app.switchView('analyze')">Record First Dream</button>
+                </div>
+            </section>
+
+            <!-- Analyze View -->
+            <section id="analyzeView" class="view">
+                <div class="view-header">
+                    <h2>🔮 Dream Analysis</h2>
+                    <p class="subtitle">Enter your dream details for AI-powered neuro-symbolic interpretation</p>
+                </div>
+
+                <div class="analysis-container">
+                    <div class="form-panel">
+                        <form id="dreamForm" class="dream-form">
+                            <div class="form-group">
+                                <label for="dreamTitle">Dream Title *</label>
+                                <input type="text" id="dreamTitle" required placeholder="e.g., Flying Over the Crystal Ocean" maxlength="200">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dreamDescription">Dream Description *</label>
+                                <textarea id="dreamDescription" required rows="8" placeholder="Describe your dream in detail. Include colors, emotions, people, places, and any symbols you remember..."></textarea>
+                                <span class="hint">Be descriptive for better symbol extraction</span>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="moodBefore">Mood Before Sleep</label>
+                                    <select id="moodBefore">
+                                        <option value="happy">😊 Happy</option>
+                                        <option value="sad">😢 Sad</option>
+                                        <option value="anxious">😰 Anxious</option>
+                                        <option value="excited">🤩 Excited</option>
+                                        <option value="neutral" selected>😐 Neutral</option>
+                                        <option value="stressed">😫 Stressed</option>
+                                        <option value="tired">😴 Tired</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="sleepQuality">Sleep Quality (1-10)</label>
+                                    <input type="range" id="sleepQuality" min="1" max="10" value="7" class="range-slider">
+                                    <span class="range-value" id="sleepQualityValue">7</span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="sleepHours">Sleep Hours</label>
+                                    <input type="number" id="sleepHours" min="0" max="24" step="0.5" value="7.5">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="dreamTags">Tags (comma separated)</label>
+                                <input type="text" id="dreamTags" placeholder="lucid, flying, ocean, recurring">
+                            </div>
+
+                            <div class="form-row checkboxes">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="isLucid">
+                                    <span class="checkmark"></span>
+                                    Lucid Dream
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="isRecurring">
+                                    <span class="checkmark"></span>
+                                    Recurring Dream
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn-primary btn-large">
+                                <span class="btn-icon">🔮</span>
+                                Analyze Dream
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="result-panel" id="resultPanel">
+                        <div class="result-placeholder">
+                            <div class="placeholder-icon">✨</div>
+                            <h3>Your analysis will appear here</h3>
+                            <p>Fill in the form and click "Analyze Dream" to see the neuro-symbolic interpretation.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Dream DNA View -->
+            <section id="dnaView" class="view">
+                <div class="view-header">
+                    <h2>🧬 Dream DNA</h2>
+                    <p class="subtitle">Your unique dream fingerprint — a 20-dimensional vector encoding your subconscious patterns</p>
+                </div>
+
+                <div class="dna-container" id="dnaContainer">
+                    <div class="empty-state">
+                        <div class="empty-icon">🧬</div>
+                        <h3>Dream DNA not yet generated</h3>
+                        <p>Analyze at least one dream to generate your unique Dream DNA fingerprint.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Insights View -->
+            <section id="insightsView" class="view">
+                <div class="view-header">
+                    <h2>📊 Insights & Statistics</h2>
+                    <p class="subtitle">Deep analytics on your dreaming patterns and subconscious trends</p>
+                </div>
+
+                <div class="insights-container" id="insightsContainer">
+                    <div class="empty-state">
+                        <div class="empty-icon">📈</div>
+                        <h3>No insights available yet</h3>
+                        <p>Record more dreams to unlock detailed statistics and pattern analysis.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ontology View -->
+            <section id="ontologyView" class="view">
+                <div class="view-header">
+                    <h2>📚 Symbol Ontology</h2>
+                    <p class="subtitle">Explore the neuro-symbolic knowledge base powering your dream analysis</p>
+                </div>
+
+                <div class="ontology-container" id="ontologyContainer">
+                    <div class="ontology-grid" id="ontologyGrid">
+                        <!-- Symbols loaded dynamically -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Dream Detail Modal -->
+        <div class="modal" id="dreamModal">
+            <div class="modal-content">
+                <button class="modal-close" onclick="app.closeModal()">&times;</button>
+                <div id="modalContent"></div>
+            </div>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div class="toast-container" id="toastContainer"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
